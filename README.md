@@ -5,6 +5,8 @@
 
 # 🐟「Sakana! React!]
 
+[English](https://github.com/boiboif/sakana-react/blob/main/README.md) | [简体中文](https://github.com/boiboif/sakana-react/blob/main/README.zh.md)
+
 [![NPM](https://img.shields.io/npm/v/sakana-react)](https://www.npmjs.com/package/sakana-react)
 
 sakana-react is a widget react component built with [react-spring](https://react-spring.io/).
