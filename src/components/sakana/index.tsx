@@ -1,30 +1,52 @@
 import { useSpring, animated, config } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import takina from '@/assets/img/takina.png';
-import { useEffect, useRef } from 'react';
+import chisato from '@/assets/img/chisato.png';
+import React, { useEffect, useRef } from 'react';
+import { useControllableValue } from 'ahooks';
+import controlIcon from '@/assets/favicon.ico';
+import useDomMove from './usedomMove';
 
+type defaultCharacter = 'takina' | 'chisato';
 interface SakanaProps {
   width?: number | string;
   height?: number | string;
-  sakanaSize?: number | string;
+  characterSize?: number | string;
   showLine?: boolean;
   lineWidth?: number;
   strokeStyle?: string;
   style?: React.CSSProperties;
   className?: string;
+  character?: defaultCharacter;
+  defaultCharacter?: defaultCharacter;
+  customCharacter?: string;
+  onControlerClick?: () => void;
+  controlerSize?: number | string;
+  customControler?: React.ReactNode;
+  showControler?: boolean;
 }
 
 const Sakana = (props: SakanaProps) => {
   const {
     width = 200,
     height = 200,
-    sakanaSize = '80%',
+    characterSize = '80%',
     showLine = true,
-    lineWidth = 5,
+    lineWidth = 4,
     strokeStyle = '#333',
     style,
     className,
+    customCharacter,
+    onControlerClick,
+    customControler,
+    controlerSize = 26,
+    showControler = true,
   } = props;
+  const [character, setCharacter] = useControllableValue<defaultCharacter>(props, {
+    valuePropName: 'character',
+    defaultValuePropName: 'defaultCharacter',
+    defaultValue: 'takina',
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sizeRef = useRef(0);
@@ -32,6 +54,7 @@ const Sakana = (props: SakanaProps) => {
     x: 0,
     y: 0,
   });
+  const imgSrc = customCharacter ?? (character === 'chisato' ? chisato : takina);
 
   useEffect(() => {
     const wrapperRect = wrapperRef.current?.getBoundingClientRect();
@@ -81,18 +104,18 @@ const Sakana = (props: SakanaProps) => {
     return { x, y };
   };
 
+  /** 拖动时初始位置 */
+  const initX = useRef(0);
+  const initY = useRef(0);
   const bind = useDrag(({ active, movement: [mx, my], down, first }) => {
-    /** 拖动时初始位置 */
-    let initX = 0,
-      initY = 0;
     if (first) {
       draw();
-      initX = springProps.x.get();
-      initY = springProps.y.get();
+      initX.current = springProps.x.get();
+      initY.current = springProps.y.get();
     }
     if (active) {
-      const realX = mx + initX;
-      const realY = my + initY;
+      const realX = mx + initX.current;
+      const realY = my + initY.current;
       const radian = Math.atan2(realY, realX);
       const distance = Math.sqrt(realY * realY + realX * realX);
       const radius = distance >= sizeRef.current / 2 ? sizeRef.current / 2 : distance;
@@ -103,6 +126,7 @@ const Sakana = (props: SakanaProps) => {
         y,
         rotate: Math.max(Math.min(45, x / 2), -45),
         config: {
+          ...config.stiff,
           friction: undefined,
         },
       });
@@ -121,36 +145,65 @@ const Sakana = (props: SakanaProps) => {
     }
   });
 
+  const { wrapperProps, control } = useDomMove({
+    onControlClick: () => {
+      if (!customCharacter) {
+        setCharacter(character === 'chisato' ? 'takina' : 'chisato');
+      }
+      onControlerClick?.();
+    },
+  });
+
   return (
-    <div
-      {...bind()}
+    <animated.div
       ref={wrapperRef}
       className={className}
       style={{
         width,
         height,
-        justifyContent: 'center',
-        alignItems: 'center',
-        display: 'flex',
         position: 'relative',
         zIndex: 999,
         touchAction: 'none',
         ...style,
+        ...wrapperProps,
       }}
     >
-      <canvas ref={canvasRef} id="bar-canvas" style={{ position: 'absolute' }} />
-      <animated.img
-        className="select-none"
-        draggable={false}
-        src={takina}
+      <div
+        {...bind()}
         style={{
-          ...springProps,
-          width: sakanaSize,
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
         }}
-        alt=""
-      />
-    </div>
+      >
+        <canvas ref={canvasRef} id="bar-canvas" style={{ position: 'absolute' }} />
+        <animated.img
+          draggable={false}
+          src={imgSrc}
+          style={{
+            ...springProps,
+            width: characterSize,
+            userSelect: 'none',
+          }}
+          alt=""
+        />
+      </div>
+      {showControler && (
+        <div {...control()} style={{ position: 'absolute', right: -15, bottom: -15 }}>
+          {customControler ?? (
+            <img
+              style={{ cursor: 'move', userSelect: 'none' }}
+              width={controlerSize}
+              draggable={false}
+              src={controlIcon}
+            />
+          )}
+        </div>
+      )}
+    </animated.div>
   );
 };
 
-export default Sakana;
+export default React.memo(Sakana);

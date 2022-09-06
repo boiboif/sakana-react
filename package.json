@@ -1,6 +1,6 @@
 {
   "name": "sakana-react",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "files": [
     "dist"
   ],
@@ -19,6 +19,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "ahooks": "^3.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-spring": "^9.5.2",
