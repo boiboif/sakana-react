@@ -15,7 +15,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <Sakana />
+        <Sakana width="100%" />
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

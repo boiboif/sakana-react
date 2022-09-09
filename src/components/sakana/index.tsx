@@ -3,14 +3,13 @@ import { useDrag } from 'react-use-gesture';
 import takina from '@/assets/img/takina.png';
 import chisato from '@/assets/img/chisato.png';
 import React, { useEffect, useRef } from 'react';
-import { useControllableValue } from 'ahooks';
+import { useControllableValue, useSize } from 'ahooks';
 import controlIcon from '@/assets/favicon.ico';
 import useDomMove from './usedomMove';
 
 type defaultCharacter = 'takina' | 'chisato';
 interface SakanaProps {
   width?: number | string;
-  height?: number | string;
   characterSize?: number | string;
   showLine?: boolean;
   lineWidth?: number;
@@ -29,7 +28,6 @@ interface SakanaProps {
 const Sakana = (props: SakanaProps) => {
   const {
     width = 200,
-    height = 200,
     characterSize = '80%',
     showLine = true,
     lineWidth = 4,
@@ -56,10 +54,11 @@ const Sakana = (props: SakanaProps) => {
   });
   const imgSrc = customCharacter ?? (character === 'chisato' ? chisato : takina);
 
+  const wrapperSize = useSize(wrapperRef);
+
   useEffect(() => {
-    const wrapperRect = wrapperRef.current?.getBoundingClientRect();
-    if (wrapperRect) {
-      const size = Math.min(wrapperRect.width, wrapperRect.height);
+    if (wrapperSize) {
+      const size = Math.min(wrapperSize.width, wrapperSize.height);
       canvasRef.current!.width = size;
       canvasRef.current!.height = size;
       sizeRef.current = size;
@@ -68,12 +67,12 @@ const Sakana = (props: SakanaProps) => {
         y: size / 2,
       };
     }
-  }, []);
+  }, [wrapperSize]);
 
   const draw = () => {
     const ctx = canvasRef.current?.getContext('2d');
     if (ctx && showLine) {
-      ctx.clearRect(0, 0, 300, 300);
+      ctx.clearRect(0, 0, sizeRef.current, sizeRef.current);
       ctx.beginPath();
       ctx.lineWidth = lineWidth;
       ctx.strokeStyle = strokeStyle;
@@ -160,7 +159,7 @@ const Sakana = (props: SakanaProps) => {
       className={className}
       style={{
         width,
-        height,
+        height: width,
         position: 'relative',
         zIndex: 999,
         touchAction: 'none',
