@@ -19,6 +19,7 @@ sakana-react is a widget react component built with [react-spring](https://react
 - Drag the character and release it, it will jump back and forth around the character.
 - Use controler to move your component and change character.
 - Support custom controller.
+- Auto resizing support.
 
 ## Usage
 First install the package by npm or yarn.
@@ -44,7 +45,6 @@ const App = () => {
 | Property         | Description                   | Type                       | Default  |
 | -----------      | ---------------------------   | -------------------------  | ------- |
 | width            | Width of the component        | `string` \| `number`       |  `200`      |
-| height           | Hidth of the component        | `string` \| `number`       |  `200`       |
 | characterSize    | Size of character img         | `string` \| `number`       | `80%` |
 | showLine         | Whether the line that connection between character and center is visible or not | `boolean`  | `true` |
 | lineWidth        | Width of the line             | `number`      | `4` |
