@@ -1,5 +1,5 @@
 import { useSpring, animated, config } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
+import { useDrag } from '@use-gesture/react';
 import takina from '@/assets/img/takina.png';
 import chisato from '@/assets/img/chisato.png';
 import React, { useEffect, useRef } from 'react';

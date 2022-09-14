@@ -1,5 +1,5 @@
 import { useSpring } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
+import { useDrag } from '@use-gesture/react';
 
 interface UseDomMoveProps {
   onControlClick?: () => void;
@@ -13,13 +13,13 @@ const useDomMove = (props: UseDomMoveProps) => {
     y: 0,
   }));
 
-  const control = useDrag(({ offset: [x, y], distance, down }) => {
+  const control = useDrag(({ offset: [x, y], down, movement: [mx, my] }) => {
     wrapperApi({
       x,
       y,
     });
 
-    if (down === false && distance === 0) {
+    if (down === false && mx + my === 0) {
       onControlClick?.();
     }
   });
