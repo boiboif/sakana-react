@@ -9,6 +9,7 @@
   "module": "./dist/sakana-react.mjs",
   "exports": {
     ".": {
+      "types": "./dist/sakana-react.d.ts",
       "import": "./dist/sakana-react.mjs",
       "require": "./dist/sakana-react.umd.js"
     }
