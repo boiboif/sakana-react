@@ -1,3 +1,6 @@
+# v2.0.0
+- Feature: Support for newer versions of react and Typescript
+
 # v1.1.2
 - chore: Upgrading from react-use-gesture to 👆 @use-gesture/react
 

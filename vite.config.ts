@@ -20,9 +20,11 @@ export default defineConfig({
     },
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖
+      // Ensure that the dependencies you want to exclude from the library are externalized
       external: ['react', 'react-dom'],
       output: {
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
+        // Global variable for UMD build mode
         globals: {
           react: 'react',
           'react-dom': 'react-dom',
