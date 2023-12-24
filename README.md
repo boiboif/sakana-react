@@ -9,7 +9,7 @@
 
 [![NPM](https://img.shields.io/npm/v/sakana-react)](https://www.npmjs.com/package/sakana-react)
 
-sakana-react is a widget react component built with [react-spring](https://react-spring.io/).
+sakana-react-v2 is a widget react component built with [react-spring](https://react-spring.io/).
 
 <https://www.bbfbbf.cn/>
 
@@ -24,9 +24,9 @@ sakana-react is a widget react component built with [react-spring](https://react
 ## Usage
 First install the package by npm or yarn.
 ```ts
-npm i sakana-react
+npm i sakana-react-v2
 // or
-yarn add sakana-react
+yarn add sakana-react-v2
 ```
 Use in React component
 ```ts

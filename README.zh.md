@@ -24,9 +24,9 @@ sakana-react 是一个使用 [react-spring](https://react-spring.io/) 构建的�
 ## Usage
 通过npm或yarn包的形式安装组件。
 ```ts
-npm i sakana-react
+npm i sakana-react-v2
 // or
-yarn add sakana-react
+yarn add sakana-react-v2
 ```
 作为React组件引入并使用
 ```ts
