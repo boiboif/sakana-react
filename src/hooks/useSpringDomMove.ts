@@ -1,11 +1,16 @@
-import { useSpring } from 'react-spring';
+import { SpringValues, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
 
-interface UseDomMoveProps {
+interface UseSpringDomMoveProps {
   onControlClick?: () => void;
 }
 
-const useDomMove = (props: UseDomMoveProps) => {
+export const useSpringDomMove = (
+  props: UseSpringDomMoveProps,
+): {
+  wrapperProps: SpringValues<{ x: number; y: number }>;
+  control: ReturnType<typeof useDrag>;
+} => {
   const { onControlClick } = props;
 
   const [wrapperProps, wrapperApi] = useSpring(() => ({
@@ -26,5 +31,3 @@ const useDomMove = (props: UseDomMoveProps) => {
 
   return { wrapperProps, control };
 };
-
-export default useDomMove;
