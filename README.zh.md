@@ -11,7 +11,7 @@
 
 sakana-react 是一个使用 [react-spring](https://react-spring.io/) 构建的开箱即用的 React 组件，把它添加到你的 React 应用中吧！
 
-<https://bbf-blog.netlify.app/>
+<https://bbfbbf.cn>
 
 ## Features
 

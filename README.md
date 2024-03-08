@@ -11,7 +11,7 @@
 
 sakana-react is a widget react component built with [react-spring](https://react-spring.io/).
 
-<https://bbf-blog.netlify.app/>
+<https://bbfbbf.cn>
 
 ## Features
 
