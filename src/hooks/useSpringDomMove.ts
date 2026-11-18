@@ -18,13 +18,13 @@ export const useSpringDomMove = (
     y: 0,
   }));
 
-  const control = useDrag(({ offset: [x, y], down, movement: [mx, my] }) => {
-    wrapperApi({
+  const control = useDrag(({ offset: [x, y], last, tap }) => {
+    wrapperApi.start({
       x,
       y,
     });
 
-    if (down === false && mx + my === 0) {
+    if (last && tap) {
       onControlClick?.();
     }
   });
