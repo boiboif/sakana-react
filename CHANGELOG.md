@@ -1,5 +1,11 @@
 # sakana-react
 
+## 1.2.1
+
+### Patch Changes
+
+- 0a4cf55: Support React 19 with React Spring 10 and include the compiled component when packing from source.
+
 ## 1.2.0
 
 ### Minor Changes
