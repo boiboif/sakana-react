@@ -2,12 +2,17 @@ import { animated, config, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
 import { useControllableValue, useSize } from 'ahooks';
 import React, { useEffect, useRef } from 'react';
-import { useSpringDomMove } from 'sakana-react';
-import controlIcon from 'sakana-react/assets/favicon.ico';
-import chisato from 'sakana-react/assets/img/chisato.png';
-import takina from 'sakana-react/assets/img/takina.png';
+import controlIcon from '../assets/favicon.ico';
+import chisato from '../assets/img/chisato.png';
+import takina from '../assets/img/takina.png';
+import { useSpringDomMove } from '../hooks';
 
 type DefaultCharacter = 'takina' | 'chisato';
+
+// Image imports can be URL strings or static image metadata (e.g. Next.js).
+function imageUrl(image: string | { src: string }): string {
+  return typeof image === 'string' ? image : image.src;
+}
 
 interface SakanaReactProps {
   width?: number | string;
@@ -26,7 +31,7 @@ interface SakanaReactProps {
   showControler?: boolean;
 }
 
-const SakanaReact = (props: SakanaReactProps) => {
+const SakanaReact = (props: SakanaReactProps): React.ReactElement => {
   const {
     width = 200,
     characterSize = '80%',
@@ -52,52 +57,50 @@ const SakanaReact = (props: SakanaReactProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sizeRef = useRef(0);
-  const lineEndPos = useRef({
+  const offset = useRef({
     x: 0,
     y: 0,
   });
   const imgSrc =
-    customCharacter ?? (character === 'chisato' ? chisato : takina);
+    customCharacter ?? imageUrl(character === 'chisato' ? chisato : takina);
 
   const wrapperSize = useSize(wrapperRef);
+  const redraw = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    if (wrapperSize) {
-      const size = Math.min(wrapperSize.width, wrapperSize.height);
-      canvasRef.current!.width = size;
-      canvasRef.current!.height = size;
-      sizeRef.current = size;
-      lineEndPos.current = {
-        x: size / 2,
-        y: size / 2,
-      };
-    }
-  }, [wrapperSize]);
-
-  const draw = () => {
-    const ctx = canvasRef.current?.getContext('2d');
-    if (ctx && showLine) {
-      ctx.clearRect(0, 0, sizeRef.current, sizeRef.current);
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!wrapperSize || !canvas || !ctx) return;
+    const size = Math.min(wrapperSize.width, wrapperSize.height);
+    canvas.width = size;
+    canvas.height = size;
+    sizeRef.current = size;
+    const center = size / 2;
+    const draw = () => {
+      ctx.clearRect(0, 0, size, size);
+      if (!showLine) return;
       ctx.beginPath();
       ctx.lineWidth = lineWidth;
       ctx.strokeStyle = strokeStyle;
       ctx.lineCap = 'round';
-      ctx.moveTo(sizeRef.current / 2, sizeRef.current / 2);
-      ctx.lineTo(lineEndPos.current.x, lineEndPos.current.y);
+      ctx.moveTo(center, center);
+      ctx.lineTo(center + offset.current.x, center + offset.current.y);
       ctx.stroke();
-    }
-    requestAnimationFrame(draw);
-  };
+    };
+    redraw.current = draw;
+    draw();
+    return () => {
+      redraw.current = null;
+    };
+  }, [wrapperSize, lineWidth, showLine, strokeStyle]);
 
   const [springProps, api] = useSpring(() => ({
     x: 0,
     y: 0,
     rotate: 0,
     onChange: (param) => {
-      lineEndPos.current = {
-        x: param.value.x + sizeRef.current / 2,
-        y: param.value.y + sizeRef.current / 2,
-      };
+      offset.current = { x: param.value.x, y: param.value.y };
+      redraw.current?.();
     },
   }));
 
@@ -113,7 +116,6 @@ const SakanaReact = (props: SakanaReactProps) => {
   const initY = useRef(0);
   const bind = useDrag(({ active, movement: [mx, my], down, first }) => {
     if (first) {
-      draw();
       initX.current = springProps.x.get();
       initY.current = springProps.y.get();
     }
@@ -126,7 +128,7 @@ const SakanaReact = (props: SakanaReactProps) => {
         distance >= sizeRef.current / 2 ? sizeRef.current / 2 : distance;
       const { x, y } = getPositionByRadian(radian, radius);
 
-      api({
+      api.start({
         x,
         y,
         rotate: Math.max(Math.min(45, x / 2), -45),
@@ -138,7 +140,7 @@ const SakanaReact = (props: SakanaReactProps) => {
     }
 
     if (down === false) {
-      api({
+      api.start({
         x: 0,
         y: 0,
         rotate: 0,
@@ -209,7 +211,8 @@ const SakanaReact = (props: SakanaReactProps) => {
               style={{ cursor: 'move', userSelect: 'none' }}
               width={controlerSize}
               draggable={false}
-              src={controlIcon}
+              src={imageUrl(controlIcon)}
+              alt="切换角色"
             />
           )}
         </div>

@@ -7,6 +7,7 @@
     "url": "git+https://github.com/boiboif/sakana-react"
   },
   "license": "MIT",
+  "packageManager": "pnpm@8.15.9",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -22,11 +23,12 @@
     "lint": "npm run lint:es && npm run lint:css",
     "lint:css": "stylelint \"{src,test}/**/*.{css,less}\"",
     "lint:es": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx}\"",
-    "prepare": "husky install && dumi setup",
-    "prepublishOnly": "father doctor && npm run build",
-    "publish": "changeset publish --registry=https://registry.npmjs.com/",
+    "setup": "husky install && dumi setup",
+    "prepack": "father build",
+    "prepublishOnly": "father doctor",
+    "release": "changeset publish --registry=https://registry.npmjs.org/",
     "start": "npm run dev",
-    "version": "changeset version"
+    "version-packages": "changeset version"
   },
   "commitlint": {
     "extends": [
@@ -51,9 +53,9 @@
     ]
   },
   "dependencies": {
-    "@react-spring/web": "^9.7.3",
-    "@use-gesture/react": "^10.3.0",
-    "ahooks": "^3.7.10"
+    "@react-spring/web": "10.1.2",
+    "@use-gesture/react": "^10.3.1",
+    "ahooks": "^3.11.0"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -75,8 +77,8 @@
     "stylelint": "^14.9.1"
   },
   "peerDependencies": {
-    "react": ">=16.9.0",
-    "react-dom": ">=16.9.0"
+    "react": "^16.9.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "publishConfig": {
     "access": "public"
