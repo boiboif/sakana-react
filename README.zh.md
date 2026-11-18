@@ -60,6 +60,19 @@ const App = () => {
 | customControler  | 自定义控制器               | `ReactNode`           | `-`      |
 | showControler    | 是否显示控制器             | `boolean`             | `true`   |
 
+## 从源码构建
+
+在仓库根目录运行以下命令，用项目指定的 pnpm 安装依赖。`npm pack` 会执行 Father 构建并生成与发布包相同结构的压缩包，其中包含 ESM、类型声明和图片资源。
+
+```sh
+corepack pnpm install --frozen-lockfile
+npm pack
+```
+
+应用可以安装生成的 `.tgz` 进行发布前验证。若从 Git 安装，把依赖固定到已经推送的完整提交，例如 `git+https://github.com/boiboif/sakana-react.git#<完整提交 SHA>`，并提交应用的锁文件。pnpm 10 会在独立目录中调用 `prepack` 生成 `dist`。需要构建授权时，将 pnpm 提示的包含该提交的完整包标识加入应用的 `onlyBuiltDependencies`。
+
+维护文档和本地 Git 钩子时运行 `corepack pnpm run setup`。版本记录使用 Changesets，`corepack pnpm run version-packages` 应用待发布的版本变更，`corepack pnpm run release` 发布到 npm。
+
 ## License
 
 MIT
